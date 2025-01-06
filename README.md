@@ -13,6 +13,7 @@ Clone the backend repository:
 ```bash
 
 git clone https://github.com/tibytt/jokesBackEnd.git
+cd jokesBackEnd
 npm i && npm run dev
 
 the backend will run at http://localhost:3005
