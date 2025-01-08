@@ -20,7 +20,10 @@ app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');
   next();
 });
-
+//get all jokes
+app.get('/jokes', (req, res) => {
+  res.json(jokes);
+});
 app.get('/', (req, res) => {
   res.send('Try /random_joke, /random_ten, /jokes/random, or /jokes/ten , /jokes/random/<any-number>');
 });
@@ -71,11 +74,18 @@ app.get('/jokes/:type/:num', (req, res, next) => {
   let num;
   try {
     num = parseInt(req.params.num);
+
     if (isNaN(num)) {
       return res.send("The passed path is not a valid number.");
     }
-    const types = req.params.type.split(',');
-    const jokesOfType = jokeByType(types, num); 
+
+    const typesParam = req.params.type.split(',');
+    if (typesParam.includes('all')) {
+      // If 'all' is included, return all jokes, ignoring types
+      return res.json(randomSelect(num));
+    }
+    const jokesOfType = jokeByType(typesParam, num); 
+
     if (!jokesOfType || jokesOfType.length === 0) {
       return res.send(`No jokes found for types: ${req.params.type}`);
     } else {
