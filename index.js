@@ -81,8 +81,14 @@ app.get('/jokes/:type/:num', (req, res, next) => {
 
     const typesParam = req.params.type.split(',');
     if (typesParam.includes('all')) {
-      // If 'all' is included, return all jokes, ignoring types
-      return res.json(randomSelect(num));
+      const filteredJokes = jokes.filter(joke => {
+        if (typesParam.length > 1) {
+          return typesParam.some(type => joke.type === type);
+        }
+        return true;
+      });
+
+      return res.json(filteredJokes);
     }
     const jokesOfType = jokeByType(typesParam, num); 
 
